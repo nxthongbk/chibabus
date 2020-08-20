@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Link, Redirect, Switch } from "react-router-dom";
+import {login_url} from '../../service/constant'
 class Login extends React.Component {
 	constructor(props) {
 		super(props);
@@ -38,7 +39,7 @@ class Login extends React.Component {
 			password: this.state.password,
 		};
 		await axios
-			.post(`https://sensorhub.tech/api/login`, auth_info)
+			.post(login_url, auth_info)
 			.then((res) => {
 				console.log(res);
 				if (res.data.auth) {
