@@ -17,6 +17,9 @@ import Accessibility from "@material-ui/icons/Accessibility";
 import BugReport from "@material-ui/icons/BugReport";
 import Code from "@material-ui/icons/Code";
 import Cloud from "@material-ui/icons/Cloud";
+import AccessibleIcon from '@material-ui/icons/Accessible';
+import PeopleIcon from '@material-ui/icons/People';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -140,7 +143,7 @@ function Dashboard(props) {
           <Card>
             <CardHeader color="success" stats icon>
               <CardIcon color="success">
-                <Icon>arrow_upward</Icon>
+                <AccessibleIcon />
               </CardIcon>
               <p className={classes.cardCategory}>Currently On Bus</p>
               <h3 className={classes.cardTitle}>{todayCustomer - customerLeftToday}</h3>
@@ -157,7 +160,7 @@ function Dashboard(props) {
           <Card>
             <CardHeader color="danger" stats icon>
               <CardIcon color="danger">
-                <Icon>arrow_downward</Icon>
+                <ExitToAppIcon />
               </CardIcon>
               <p className={classes.cardCategory}>Customer Left</p>
               <h3 className={classes.cardTitle}>{customerLeftToday}</h3>
@@ -174,7 +177,7 @@ function Dashboard(props) {
           <Card>
             <CardHeader color="info" stats icon>
               <CardIcon color="info">
-                <Accessibility />
+                <PeopleIcon />
               </CardIcon>
               <p className={classes.cardCategory}>Total customers</p>
               <h3 className={classes.cardTitle}>{totalCustomer}</h3>
