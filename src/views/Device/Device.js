@@ -59,14 +59,15 @@ function Device(props) {
   const [isModify, setModify] = React.useState(false);
   const [deviceIDActive, setDeviceID] = React.useState("");
 
-  useEffect(() => {
-    getData() 
-  }, [])
-
   const getData = async ()=>{
     var data = await axios().get('/device')
     props.updateDevice(data.data)
   }
+  
+  useEffect(() => {
+    getData();
+  },[])
+
 
   const toggle = () => setModal(!modal);
 
@@ -118,6 +119,8 @@ function Device(props) {
               break;
           case 'driver': 
               setDriver(e.target.value)
+              break;
+          default: 
       }
   }
 
@@ -135,7 +138,7 @@ function Device(props) {
     const a =props.devices && props.devices.map((device, index)=>{
       return [
         device._id, device.license_plate, device.driver,
-        <img src="/material-dashboard-react/images/tick.svg" width="25px" />,
+        <img src="/material-dashboard-react/images/tick.svg" alt="" width="25px" />,
         device.timestamp, 
         <div>
           <Button onClick={()=>toggleModify(device._id, device.license_plate, device.driver)}  color="success">
