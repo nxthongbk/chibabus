@@ -46,14 +46,6 @@ const dashboardRoutes = [
     layout: "/"
   },
   {
-    path: "/user",
-    name: "User Profile",
-    rtlName: "ملف تعريفي للمستخدم",
-    icon: Person,
-    component: UserProfile,
-    layout: "/"
-  },
-  {
     path: "/device",
     name: "Device",
     rtlName: "قائمة الجدول",
@@ -83,6 +75,14 @@ const dashboardRoutes = [
     rtlName: "خرائط",
     icon: LocationOn,
     component: Maps,
+    layout: "/"
+  },
+  {
+    path: "/user",
+    name: "User Profile",
+    rtlName: "ملف تعريفي للمستخدم",
+    icon: Person,
+    component: UserProfile,
     layout: "/"
   },
   {

@@ -14,6 +14,7 @@ import {
     Button, Modal, ModalHeader, ModalBody, ModalFooter,
     Form, FormGroup, Label, Input
 } from 'reactstrap';
+import ButtonCustom from '../../components/CustomButtons/Button'
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -53,8 +54,10 @@ function Device(props) {
   } = props;
 
   const [modal, setModal] = React.useState(false);
-  const [license_plate, setLicensePlate] = React.useState("")
-  const [driver, setDriver] = React.useState("")
+  const [license_plate, setLicensePlate] = React.useState("");
+  const [driver, setDriver] = React.useState("");
+  const [isModify, setModify] = React.useState(false);
+  const [deviceIDActive, setDeviceID] = React.useState("");
 
   useEffect(() => {
     getData() 
@@ -66,13 +69,46 @@ function Device(props) {
   }
 
   const toggle = () => setModal(!modal);
+
+  const toggleAdd = () =>{
+    setModal(!modal);
+    setModify(false);
+    clearInput();
+  }
+
+  const toggleModify = (device_id, license, driver) =>{
+    setModal(!modal);
+    setModify(true);
+    setDeviceID(device_id);
+    setLicensePlate(license);
+    setDriver(driver);
+  }
+
+  const clearInput = () => {
+    setDriver("");;
+    setLicensePlate("");
+  }
+
   const submitForm = () =>{
     setModal(!modal);
-    axios().post('/device',{
+    if(!isModify){
+      axios().post('/device',{
         license_plate,
         driver
-    }).then(res=>{getData()})
-    .catch(err=>console.log(err))
+      }).then(()=>{getData()})
+      .catch(err=>console.log(err));
+      clearInput()
+      return;
+    }
+
+    axios().put(`/device/id/${deviceIDActive}`,{
+      license_plate,
+      driver
+    }).then(()=>{getData()})
+    .catch(err=>console.log(err));
+    clearInput()
+    return;
+    
   }
 
   const inputChange = (e) =>{
@@ -85,16 +121,39 @@ function Device(props) {
       }
   }
 
+  const deleteDevice = (device) =>{
+    var result = window.confirm("ARE YOU SURE")
+    if(result){
+      axios().delete('/device',{
+        data:{ id: device}
+      }).then(()=>{getData()})
+      .catch(err=>console.log(err));
+    }
+  }
+  
   const showDevices = ()=>{
     const a =props.devices && props.devices.map((device, index)=>{
-      return [device._id, device.license_plate, device.driver, device.timestamp]
+      return [
+        device._id, device.license_plate, device.driver,
+        <img src="/material-dashboard-react/images/tick.svg" width="25px" />,
+        device.timestamp, 
+        <div>
+          <Button onClick={()=>toggleModify(device._id, device.license_plate, device.driver)}  color="success">
+            <i className="fas fa-wrench"></i>
+          </Button> 
+          {" "}
+          <Button onClick={()=>deleteDevice(device._id)}  color="danger">
+            <i className="fas fa-trash-alt"></i>
+          </Button>
+        </div>
+      ]
     })
     return a;
   }
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
-      <Button color="success" onClick={toggle}> + ADD</Button>
+      <ButtonCustom  onClick={toggleAdd} color="primary"> + ADD</ButtonCustom>
         <Card>
           <CardHeader color="primary">
             <h4 className={classes.cardTitleWhite}>Device</h4>
@@ -105,7 +164,7 @@ function Device(props) {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "LICENSE PLATE", "DRIVER", "TIME", ""]}
+              tableHead={["ID", "LICENSE PLATE","DRIVER", "ACTIVE" , "TIME", "OPTIONS"]}
               tableData={showDevices()}
             />
           </CardBody>
@@ -113,7 +172,9 @@ function Device(props) {
       </GridItem>
         <div>
         <Modal isOpen={modal} toggle={toggle} className={className}>
-            <ModalHeader toggle={toggle}>ADD DEVICE</ModalHeader>
+            <ModalHeader toggle={toggle}>
+              {isModify ? "MODIFY DEVICE" : "ADD DEVICE"}
+            </ModalHeader>
             <ModalBody>
                 <Form>
                     <FormGroup>
