@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -39,12 +39,54 @@ import {
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import { getAllJSDocTags } from "typescript";
+import axios from "service/axiosInstance";
+import Axios from "axios";
+
+import timeFormat from '../../service/timeFormat';
 
 const useStyles = makeStyles(styles);
 
 function Dashboard(props) {
   const classes = useStyles();
-  console.log(props.devices)
+
+  const [id, setID] = React.useState("");
+  const [state, setState] = React.useState("");
+  const [image, setImage] = React.useState("");
+  const [lat, setLat] = React.useState(0);
+  const [long, setLong] = React.useState(0);
+  const [age, setAge] = React.useState(0);
+  const [gender, setGender] = React.useState(false);
+  const [bus, setBus] = React.useState("");
+  const [time, setTime] = React.useState("");
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    var data = await axios().get('/buscounter');
+    console.log(data.data);
+    props.updateBusCounter(data.data);
+  }
+
+  const showBusCounter = () => {
+    const a = props.buscounter && props.buscounter.map((customer, index) => {
+      
+
+      return [customer._id,
+              customer.state,
+              customer.image,
+              customer.lat,
+              customer.long,
+              customer.age,
+              customer.gender ? "Male" : "Female",
+              customer.device_id.license_plate,
+              timeFormat(customer.timestamp)]
+    })
+    return a;
+  }
+
   return (
     <div>
       <GridContainer>
@@ -120,6 +162,22 @@ function Dashboard(props) {
                 Just Updated
               </div>
             </CardFooter>
+          </Card>
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Customer Stats</h4>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={["ID", "State", "Image", "Latitude", "Longtitude", "Age", "Gender", "Bus", "Time"]}
+                tableData={showBusCounter()}
+              />
+            </CardBody>
           </Card>
         </GridItem>
       </GridContainer>
@@ -267,11 +325,13 @@ function Dashboard(props) {
 }
 
 const mapState = state => ({
-  devices: state.devices
+  buscounter: state.buscounter
 })
 
 const mapDispatch = dispatch => ({
-
+  updateBusCounter : (buscounter) => {
+    dispatch({type:"UPDATE_BUSCOUNTER", buscounter});
+  }
 })
 
 export default connect(mapState,mapDispatch)(Dashboard)
