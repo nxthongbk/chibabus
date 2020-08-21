@@ -5,6 +5,7 @@ import ChartistGraph from "react-chartist";
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
+import DirectionBus from '@material-ui/icons/DirectionsBus';
 import Store from "@material-ui/icons/Store";
 import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
@@ -50,15 +51,9 @@ const useStyles = makeStyles(styles);
 function Dashboard(props) {
   const classes = useStyles();
 
-  const [id, setID] = React.useState("");
-  const [state, setState] = React.useState("");
-  const [image, setImage] = React.useState("");
-  const [lat, setLat] = React.useState(0);
-  const [long, setLong] = React.useState(0);
-  const [age, setAge] = React.useState(0);
-  const [gender, setGender] = React.useState(false);
-  const [bus, setBus] = React.useState("");
-  const [time, setTime] = React.useState("");
+  const [totalCustomer, setTotalCustomer] = React.useState(0);
+  const [todayCustomer, setTodayCustomer] = React.useState(0);
+  const [customerLeftToday, setCustomerLeftToday] = React.useState(0);
 
   useEffect(() => {
     getData();
@@ -66,16 +61,40 @@ function Dashboard(props) {
 
   const getData = async () => {
     var data = await axios().get('/buscounter');
-    console.log(data.data);
     props.updateBusCounter(data.data);
+    setTotalCustomer(Math.round(data.data.length/2));
+    customerToday(data.data);
+  }
+
+  const datesAreOnSameDay = (first, second) =>
+    first.getFullYear() === second.getFullYear() &&
+    first.getMonth() === second.getMonth() &&
+    first.getDate() === second.getDate();
+
+  const customerToday = (buscounter) => {
+    let today = new Date();
+    let current = 0;
+    let left = 0;
+    const arr = buscounter.map((customer, index) => {
+      let customerDate = new Date(customer.timestamp);
+      if (datesAreOnSameDay(today, customerDate)) {
+        if (customer.state == "up") {
+          current += 1;
+        } else {
+          left += 1;
+        }
+      }
+    });
+    setTodayCustomer(current);
+    setCustomerLeftToday(left);
   }
 
   //convert state from text to icon 
   const customerState = (state) => {
     if (state === "up") {
-      return <img src="/material-dashboard-react/images/get_on_bus.jpg" width="25px" />
+      return <img src="/material-dashboard-react/images/get_on_bus.jpg" width="25px" alt="Up" />
     }
-    return <img src="/material-dashboard-react/images/get_off_bus.jpg" width="25px" />;
+    return <img src="/material-dashboard-react/images/get_off_bus.jpg" width="25px" alt="Down" />;
   }
 
   const showBusCounter = () => {
@@ -102,21 +121,17 @@ function Dashboard(props) {
           <Card>
             <CardHeader color="warning" stats icon>
               <CardIcon color="warning">
-                <Icon>content_copy</Icon>
+                <DirectionBus />
               </CardIcon>
-              <p className={classes.cardCategory}>Used Space</p>
+              <p className={classes.cardCategory}>Today</p>
               <h3 className={classes.cardTitle}>
-                49/50 <small>GB</small>
+                {todayCustomer}
               </h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
-                <Danger>
-                  <Warning />
-                </Danger>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                  Get more space
-                </a>
+                <Update />
+                Just now
               </div>
             </CardFooter>
           </Card>
@@ -125,15 +140,15 @@ function Dashboard(props) {
           <Card>
             <CardHeader color="success" stats icon>
               <CardIcon color="success">
-                <Store />
+                <Icon>arrow_upward</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Revenue</p>
-              <h3 className={classes.cardTitle}>$34,245</h3>
+              <p className={classes.cardCategory}>Currently On Bus</p>
+              <h3 className={classes.cardTitle}>{todayCustomer - customerLeftToday}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
-                <DateRange />
-                Last 24 Hours
+                <Update />
+                Just now
               </div>
             </CardFooter>
           </Card>
@@ -142,15 +157,15 @@ function Dashboard(props) {
           <Card>
             <CardHeader color="danger" stats icon>
               <CardIcon color="danger">
-                <Icon>info_outline</Icon>
+                <Icon>arrow_downward</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Fixed Issues</p>
-              <h3 className={classes.cardTitle}>75</h3>
+              <p className={classes.cardCategory}>Customer Left</p>
+              <h3 className={classes.cardTitle}>{customerLeftToday}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
-                <LocalOffer />
-                Tracked from Github
+                <Update />
+                Just now
               </div>
             </CardFooter>
           </Card>
@@ -161,13 +176,13 @@ function Dashboard(props) {
               <CardIcon color="info">
                 <Accessibility />
               </CardIcon>
-              <p className={classes.cardCategory}>Followers</p>
-              <h3 className={classes.cardTitle}>+245</h3>
+              <p className={classes.cardCategory}>Total customers</p>
+              <h3 className={classes.cardTitle}>{totalCustomer}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <Update />
-                Just Updated
+                Last 24 hours
               </div>
             </CardFooter>
           </Card>
