@@ -48,8 +48,8 @@ const dailyCustomerChart = (data) => {
           if (data.type === "line" || data.type === "area") {
             data.element.animate({
               d: {
-                begin: 600,
-                dur: 700,
+                begin: 400,
+                dur: 500,
                 from: data.path
                   .clone()
                   .scale(1, 0)
