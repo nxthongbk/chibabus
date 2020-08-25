@@ -59,9 +59,7 @@ function Dashboard(props) {
   const [totalCustomer, setTotalCustomer] = React.useState(0);
   const [todayCustomer, setTodayCustomer] = React.useState(0);
   const [customerLeftToday, setCustomerLeftToday] = React.useState(0);
-  const [customerOnDay, setCustomerOnDay] = React.useState();
-  const [customerOnMonth, setCustomerOnMonth] = React.useState();
-
+  const [upTime, setUpTime] = React.useState();
   useEffect(() => {
     getData();
   }, []);
@@ -86,6 +84,7 @@ function Dashboard(props) {
 
   const customerToday = (buscounter) => {
     let today = new Date();
+    setUpTime(today.toLocaleString());
     let current = 0;
     let left = 0;
     const arr = buscounter.map((customer, index) => {
@@ -144,7 +143,7 @@ function Dashboard(props) {
             <CardFooter stats>
               <div className={classes.stats}>
                 <Update />
-                Just now
+                {upTime}
               </div>
             </CardFooter>
           </Card>
@@ -161,7 +160,7 @@ function Dashboard(props) {
             <CardFooter stats>
               <div className={classes.stats}>
                 <Update />
-                Just now
+                {upTime}
               </div>
             </CardFooter>
           </Card>
@@ -178,7 +177,7 @@ function Dashboard(props) {
             <CardFooter stats>
               <div className={classes.stats}>
                 <Update />
-                Just now
+                {upTime}
               </div>
             </CardFooter>
           </Card>
@@ -195,7 +194,7 @@ function Dashboard(props) {
             <CardFooter stats>
               <div className={classes.stats}>
                 <Update />
-                Last 24 hours
+                {upTime}
               </div>
             </CardFooter>
           </Card>
@@ -231,7 +230,7 @@ function Dashboard(props) {
         </GridItem>
         <GridItem xs={12} sm={12} md={6}>
           <Card chart>
-            <CardHeader color="success">
+            <CardHeader color="warning">
               <ChartistGraph
                 className="ct-chart"
                 data={dailyCustomerChart(props.customeronmonth).data}
