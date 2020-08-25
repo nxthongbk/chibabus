@@ -17,6 +17,9 @@ import Accessibility from "@material-ui/icons/Accessibility";
 import BugReport from "@material-ui/icons/BugReport";
 import Code from "@material-ui/icons/Code";
 import Cloud from "@material-ui/icons/Cloud";
+import AccessibleIcon from '@material-ui/icons/Accessible';
+import PeopleIcon from '@material-ui/icons/People';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -34,6 +37,8 @@ import {connect} from 'react-redux';
 import { bugs, website, server } from "variables/general.js";
 
 import {
+  dailyCustomerChart,
+  monthlyCustomerChart,
   dailySalesChart,
   emailsSubscriptionChart,
   completedTasksChart
@@ -54,17 +59,25 @@ function Dashboard(props) {
   const [totalCustomer, setTotalCustomer] = React.useState(0);
   const [todayCustomer, setTodayCustomer] = React.useState(0);
   const [customerLeftToday, setCustomerLeftToday] = React.useState(0);
+  const [customerOnDay, setCustomerOnDay] = React.useState();
+  const [customerOnMonth, setCustomerOnMonth] = React.useState();
 
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
-    var data = await axios().get('/buscounter');
-    props.updateBusCounter(data.data);
-    setTotalCustomer(Math.round(data.data.length/2));
-    customerToday(data.data);
-  }
+    var buscounter = await axios().get('/buscounter');
+    props.updateBusCounter(buscounter.data);
+    setTotalCustomer(Math.round(buscounter.data.length/2));
+    customerToday(buscounter.data);
+
+    var customerOnDay = await axios().get('/buscounter/statistic/customer_on_day');
+    props.updateCustomerOnDay(customerOnDay.data);
+
+    var customerOnMonth = await axios().get('/buscounter/statistic/customer_on_month');
+    props.updateCustomerOnMonth(customerOnMonth.data);
+  };
 
   const datesAreOnSameDay = (first, second) =>
     first.getFullYear() === second.getFullYear() &&
@@ -87,15 +100,15 @@ function Dashboard(props) {
     });
     setTodayCustomer(current);
     setCustomerLeftToday(left);
-  }
+  };
 
   //convert state from text to icon 
   const customerState = (state) => {
     if (state === "up") {
-      return <img src="/material-dashboard-react/images/get_on_bus.jpg" width="25px" alt="Up" />
+      return <img src="/material-dashboard-react/images/get_on_bus.jpg" width="25px" alt="Up" />;
     }
     return <img src="/material-dashboard-react/images/get_off_bus.jpg" width="25px" alt="Down" />;
-  }
+  };
 
   const showBusCounter = () => {
     const a = props.buscounter && props.buscounter.map((customer, index) => {
@@ -109,10 +122,10 @@ function Dashboard(props) {
         customer.gender ? "Male" : "Female",
         customer.device_id.license_plate,
         timeFormat(customer.timestamp)
-      ]
-    })
+      ];
+    });
     return a;
-  }
+  };
 
   return (
     <div>
@@ -140,7 +153,7 @@ function Dashboard(props) {
           <Card>
             <CardHeader color="success" stats icon>
               <CardIcon color="success">
-                <Icon>arrow_upward</Icon>
+                <AccessibleIcon />
               </CardIcon>
               <p className={classes.cardCategory}>Currently On Bus</p>
               <h3 className={classes.cardTitle}>{todayCustomer - customerLeftToday}</h3>
@@ -157,7 +170,7 @@ function Dashboard(props) {
           <Card>
             <CardHeader color="danger" stats icon>
               <CardIcon color="danger">
-                <Icon>arrow_downward</Icon>
+                <ExitToAppIcon />
               </CardIcon>
               <p className={classes.cardCategory}>Customer Left</p>
               <h3 className={classes.cardTitle}>{customerLeftToday}</h3>
@@ -174,7 +187,7 @@ function Dashboard(props) {
           <Card>
             <CardHeader color="info" stats icon>
               <CardIcon color="info">
-                <Accessibility />
+                <PeopleIcon />
               </CardIcon>
               <p className={classes.cardCategory}>Total customers</p>
               <h3 className={classes.cardTitle}>{totalCustomer}</h3>
@@ -183,6 +196,62 @@ function Dashboard(props) {
               <div className={classes.stats}>
                 <Update />
                 Last 24 hours
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={6}>
+          <Card chart>
+            <CardHeader color="success">
+              <ChartistGraph
+                className="ct-chart"
+                data={dailyCustomerChart(props.customeronday).data}
+                type="Line"
+                options={dailyCustomerChart(props.customeronday).options}
+                listener={dailyCustomerChart(props.customeronday).animation}
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>Daily</h4>
+              <p className={classes.cardCategory}>
+                <span className={classes.successText}>
+                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
+                </span>{" "}
+                increase in today sales.
+              </p>
+            </CardBody>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime /> updated 4 minutes ago
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={6}>
+          <Card chart>
+            <CardHeader color="success">
+              <ChartistGraph
+                className="ct-chart"
+                data={dailyCustomerChart(props.customeronmonth).data}
+                type="Line"
+                options={dailyCustomerChart(props.customeronmonth).options}
+                listener={dailyCustomerChart(props.customeronmonth).animation}
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>Monthly</h4>
+              <p className={classes.cardCategory}>
+                <span className={classes.successText}>
+                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
+                </span>{" "}
+                increase in today sales.
+              </p>
+            </CardBody>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime /> updated 4 minutes ago
               </div>
             </CardFooter>
           </Card>
@@ -209,13 +278,23 @@ function Dashboard(props) {
 }
 
 const mapState = state => ({
-  buscounter: state.buscounter
-})
+  buscounter: state.buscounter,
+  customeronday: state.customeronday,
+  customeronmonth: state.customeronmonth
+});
 
 const mapDispatch = dispatch => ({
+  updateCustomerOnDay : (customeronday) => {
+    dispatch({type:"UPDATE_CUSTOMERONDAY", customeronday});
+  },
+  
+  updateCustomerOnMonth : (customeronmonth) => {
+    dispatch({type:"UPDATE_CUSTOMERONMONTH", customeronmonth});
+  },
+
   updateBusCounter : (buscounter) => {
     dispatch({type:"UPDATE_BUSCOUNTER", buscounter});
   }
-})
+});
 
 export default connect(mapState,mapDispatch)(Dashboard)
