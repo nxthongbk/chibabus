@@ -14,7 +14,8 @@ import {
     Button, Modal, ModalHeader, ModalBody, ModalFooter,
     Form, FormGroup, Label, Input
 } from 'reactstrap';
-import ButtonCustom from '../../components/CustomButtons/Button'
+import ButtonCustom from '../../components/CustomButtons/Button';
+import timeFormat from '../../service/timeFormat';
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -139,7 +140,7 @@ function Device(props) {
       return [
         device._id, device.license_plate, device.driver,
         <img src="/material-dashboard-react/images/tick.svg" alt="" width="25px" />,
-        device.timestamp, 
+        timeFormat(device.timestamp), 
         <div>
           <Button onClick={()=>toggleModify(device._id, device.license_plate, device.driver)}  color="success">
             <i className="fas fa-wrench"></i>
