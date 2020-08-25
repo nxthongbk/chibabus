@@ -223,7 +223,8 @@ function Dashboard(props) {
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
-                <AccessTime /> updated 4 minutes ago
+                <AccessTime />
+                {upTime}
               </div>
             </CardFooter>
           </Card>
@@ -250,7 +251,8 @@ function Dashboard(props) {
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
-                <AccessTime /> updated 4 minutes ago
+                <AccessTime />
+                {upTime}
               </div>
             </CardFooter>
           </Card>
