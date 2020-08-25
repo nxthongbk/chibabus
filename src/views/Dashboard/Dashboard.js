@@ -37,6 +37,8 @@ import {connect} from 'react-redux';
 import { bugs, website, server } from "variables/general.js";
 
 import {
+  dailyCustomerChart,
+  monthlyCustomerChart,
   dailySalesChart,
   emailsSubscriptionChart,
   completedTasksChart
@@ -57,17 +59,25 @@ function Dashboard(props) {
   const [totalCustomer, setTotalCustomer] = React.useState(0);
   const [todayCustomer, setTodayCustomer] = React.useState(0);
   const [customerLeftToday, setCustomerLeftToday] = React.useState(0);
+  const [customerOnDay, setCustomerOnDay] = React.useState();
+  const [customerOnMonth, setCustomerOnMonth] = React.useState();
 
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
-    var data = await axios().get('/buscounter');
-    props.updateBusCounter(data.data);
-    setTotalCustomer(Math.round(data.data.length/2));
-    customerToday(data.data);
-  }
+    var buscounter = await axios().get('/buscounter');
+    props.updateBusCounter(buscounter.data);
+    setTotalCustomer(Math.round(buscounter.data.length/2));
+    customerToday(buscounter.data);
+
+    var customerOnDay = await axios().get('/buscounter/statistic/customer_on_day');
+    props.updateCustomerOnDay(customerOnDay.data);
+
+    var customerOnMonth = await axios().get('/buscounter/statistic/customer_on_month');
+    props.updateCustomerOnMonth(customerOnMonth.data);
+  };
 
   const datesAreOnSameDay = (first, second) =>
     first.getFullYear() === second.getFullYear() &&
@@ -90,15 +100,15 @@ function Dashboard(props) {
     });
     setTodayCustomer(current);
     setCustomerLeftToday(left);
-  }
+  };
 
   //convert state from text to icon 
   const customerState = (state) => {
     if (state === "up") {
-      return <img src="/material-dashboard-react/images/get_on_bus.jpg" width="25px" alt="Up" />
+      return <img src="/material-dashboard-react/images/get_on_bus.jpg" width="25px" alt="Up" />;
     }
     return <img src="/material-dashboard-react/images/get_off_bus.jpg" width="25px" alt="Down" />;
-  }
+  };
 
   const showBusCounter = () => {
     const a = props.buscounter && props.buscounter.map((customer, index) => {
@@ -112,10 +122,10 @@ function Dashboard(props) {
         customer.gender ? "Male" : "Female",
         customer.device_id.license_plate,
         timeFormat(customer.timestamp)
-      ]
-    })
+      ];
+    });
     return a;
-  }
+  };
 
   return (
     <div>
@@ -192,6 +202,62 @@ function Dashboard(props) {
         </GridItem>
       </GridContainer>
       <GridContainer>
+        <GridItem xs={12} sm={12} md={6}>
+          <Card chart>
+            <CardHeader color="success">
+              <ChartistGraph
+                className="ct-chart"
+                data={dailyCustomerChart(props.customeronday).data}
+                type="Line"
+                options={dailyCustomerChart(props.customeronday).options}
+                listener={dailyCustomerChart(props.customeronday).animation}
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>Daily</h4>
+              <p className={classes.cardCategory}>
+                <span className={classes.successText}>
+                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
+                </span>{" "}
+                increase in today sales.
+              </p>
+            </CardBody>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime /> updated 4 minutes ago
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={6}>
+          <Card chart>
+            <CardHeader color="success">
+              <ChartistGraph
+                className="ct-chart"
+                data={dailyCustomerChart(props.customeronmonth).data}
+                type="Line"
+                options={dailyCustomerChart(props.customeronmonth).options}
+                listener={dailyCustomerChart(props.customeronmonth).animation}
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>Monthly</h4>
+              <p className={classes.cardCategory}>
+                <span className={classes.successText}>
+                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
+                </span>{" "}
+                increase in today sales.
+              </p>
+            </CardBody>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime /> updated 4 minutes ago
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+      </GridContainer>
+      <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
@@ -212,13 +278,23 @@ function Dashboard(props) {
 }
 
 const mapState = state => ({
-  buscounter: state.buscounter
-})
+  buscounter: state.buscounter,
+  customeronday: state.customeronday,
+  customeronmonth: state.customeronmonth
+});
 
 const mapDispatch = dispatch => ({
+  updateCustomerOnDay : (customeronday) => {
+    dispatch({type:"UPDATE_CUSTOMERONDAY", customeronday});
+  },
+  
+  updateCustomerOnMonth : (customeronmonth) => {
+    dispatch({type:"UPDATE_CUSTOMERONMONTH", customeronmonth});
+  },
+
   updateBusCounter : (buscounter) => {
     dispatch({type:"UPDATE_BUSCOUNTER", buscounter});
   }
-})
+});
 
 export default connect(mapState,mapDispatch)(Dashboard)

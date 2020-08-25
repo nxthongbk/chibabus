@@ -147,10 +147,10 @@ export default function RTLPage() {
             <CardHeader color="success">
               <ChartistGraph
                 className="ct-chart"
-                data={dailySalesChart.data}
+                data={dailySalesChart().data}
                 type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
+                options={dailySalesChart().options}
+                listener={dailySalesChart().animation}
               />
             </CardHeader>
             <CardBody>
@@ -176,9 +176,9 @@ export default function RTLPage() {
                 className="ct-chart"
                 data={emailsSubscriptionChart.data}
                 type="Bar"
-                options={emailsSubscriptionChart.options}
-                responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                listener={emailsSubscriptionChart.animation}
+                options={emailsSubscriptionChart().options}
+                responsiveOptions={emailsSubscriptionChart().responsiveOptions}
+                listener={emailsSubscriptionChart().animation}
               />
             </CardHeader>
             <CardBody>
@@ -197,10 +197,10 @@ export default function RTLPage() {
             <CardHeader color="danger">
               <ChartistGraph
                 className="ct-chart"
-                data={completedTasksChart.data}
+                data={completedTasksChart().data}
                 type="Line"
-                options={completedTasksChart.options}
-                listener={completedTasksChart.animation}
+                options={completedTasksChart().options}
+                listener={completedTasksChart().animation}
               />
             </CardHeader>
             <CardBody>
