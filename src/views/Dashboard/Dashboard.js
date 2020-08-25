@@ -20,17 +20,14 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import {connect} from 'react-redux';
-
-// import { bugs, website, server } from "variables/general.js";
-
+// chart data
 import {
   dailyCustomerChart,
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-// import { getAllJSDocTags } from "typescript";
+// services
 import axios from "service/axiosInstance";
-
 import timeFormat from '../../service/timeFormat';
 
 const useStyles = makeStyles(styles);
@@ -196,7 +193,7 @@ function Dashboard(props) {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Daily</h4>
+              <h4 className={classes.cardTitle}>Number of Customers each Day</h4>
               {/* <p className={classes.cardCategory}>
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%
@@ -224,7 +221,7 @@ function Dashboard(props) {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Monthly</h4>
+              <h4 className={classes.cardTitle}>Number of Customers every Months</h4>
               {/* <p className={classes.cardCategory}>
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%

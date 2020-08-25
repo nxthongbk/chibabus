@@ -48,6 +48,12 @@ export default function AdminNavbarLinks() {
   const handleCloseProfile = () => {
     setOpenProfile(null);
   };
+  const handleOpenUserProfile = () => {
+    setOpenProfile(null);
+  };
+  const handleOpenSetting = () => {
+    setOpenProfile(null);
+  };
   const handleLogout = () => {
     localStorage.removeItem('token');
     setLogin(false)
@@ -78,6 +84,7 @@ export default function AdminNavbarLinks() {
         simple={!(window.innerWidth > 959)}
         aria-label="Dashboard"
         className={classes.buttonLink}
+        href="/dashboard"
       >
         <Dashboard className={classes.icons} />
         <Hidden mdUp implementation="css">
@@ -201,13 +208,13 @@ export default function AdminNavbarLinks() {
                 <ClickAwayListener onClickAway={handleCloseProfile}>
                   <MenuList role="menu">
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={handleOpenUserProfile}
                       className={classes.dropdownItem}
                     >
-                      Profile
+                      <a href='/user'>Profile</a>
                     </MenuItem>
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={handleOpenSetting}
                       className={classes.dropdownItem}
                     >
                       Settings
