@@ -1,6 +1,7 @@
 /*eslint-disable*/
 import React from "react";
 // nodejs library to set properties for components
+var FormData = require('form-data');
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -9,12 +10,18 @@ import AddAlert from "@material-ui/icons/AddAlert";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
+import Button from "components/CustomButtons/Button.js";
 import Snackbar from "components/Snackbar/Snackbar.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import {  
+  Modal, ModalHeader, ModalBody, ModalFooter,
+  Form, FormGroup, Label, Input
+} from 'reactstrap';
+
+import axios from '../../service/axiosInstance';
 
 const styles = {
   cardCategoryWhite: {
@@ -50,6 +57,10 @@ const useStyles = makeStyles(styles);
 
 export default function Notifications() {
   const classes = useStyles();
+
+  const [image, setImage] = React.useState(null);
+  const [file, setFile] = React.useState();
+  
   const [tl, setTL] = React.useState(false);
   const [tc, setTC] = React.useState(false);
   const [tr, setTR] = React.useState(false);
@@ -120,7 +131,58 @@ export default function Notifications() {
         break;
     }
   };
-  return (
+
+  const inputChange = (e) =>{
+    switch(e.target.name){
+        case 'image':
+            setImage(e.target.value);
+            setFile(e.target.files[0]);
+            break;
+        case 'driver': 
+            setDriver(e.target.value);
+            break;
+        case 'line':
+            setLine(e.target.value);
+            break;
+        default: 
+    }
+  }
+  const submitForm = () => {
+    const form = new FormData();
+
+    form.append('file', file);
+    form.append("state", "up");
+    form.append("lat", 56.5578453);
+    form.append("long", 25.345312);
+    form.append("age", 20);
+    form.append("gender", false);
+    form.append("device_id", "5f3e51de0021dd1450cd4c13");
+
+    axios().post(`/buscounter/`, form, {
+    }).then(res=>console.log(res))
+    .catch(err=>console.log(err));
+  };
+
+  return (<div>
+    <Card>
+      <CardHeader color="primary">
+        <h4>Upload buscounter</h4>
+      </CardHeader>
+      <CardBody>
+        <Form>
+          <FormGroup>
+              <Label>Image</Label>
+              <Input 
+                  type="file" 
+                  name="image"
+                  onChange={inputChange}
+                  value={image}
+              />
+          </FormGroup>
+        </Form>   
+        <Button color="primary" type="submit"  onClick={submitForm}>Submit</Button>   
+      </CardBody>
+    </Card>
     <Card>
       <CardHeader color="primary">
         <h4 className={classes.cardTitleWhite}>Notifications</h4>
@@ -342,5 +404,6 @@ export default function Notifications() {
         </GridContainer>
       </CardBody>
     </Card>
+    </div>
   );
 }

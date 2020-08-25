@@ -28,6 +28,7 @@ import Language from "@material-ui/icons/Language";
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import Device from "views/Device/Device.js";
+// import Documentation from "views/Documentation/Documentation.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
@@ -54,22 +55,6 @@ const dashboardRoutes = [
     layout: "/"
   },
   {
-    path: "/typography",
-    name: "Typography",
-    rtlName: "طباعة",
-    icon: LibraryBooks,
-    component: Typography,
-    layout: "/"
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    rtlName: "الرموز",
-    icon: BubbleChart,
-    component: Icons,
-    layout: "/"
-  },
-  {
     path: "/maps",
     name: "Maps",
     rtlName: "خرائط",
@@ -84,22 +69,22 @@ const dashboardRoutes = [
     icon: Person,
     component: UserProfile,
     layout: "/"
-  },
+  },  
   {
-    path: "/notifications",
-    name: "Notifications",
-    rtlName: "إخطارات",
-    icon: Notifications,
-    component: NotificationsPage,
+    path: "/documentation",
+    name: "Documentation",
+    rtlName: "طباعة",
+    icon: LibraryBooks,
+    component: Typography,
     layout: "/"
   },
   {
-    path: "/rtl-page",
-    name: "RTL Support",
+    path: "/support",
+    name: "Support",
     rtlName: "پشتیبانی از راست به چپ",
     icon: Language,
     component: RTLPage,
-    layout: "/rtl"
+    layout: "/"
   }
 ];
 

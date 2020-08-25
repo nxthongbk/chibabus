@@ -1,9 +1,13 @@
 import React,{useEffect} from "react";
+// @material-ui/icon
+import DeleteIcon from '@material-ui/icons/Delete';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import Button from '@material-ui/core/Button';
+import ButtonCustom from "components/CustomButtons/Button.js";
 import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -11,10 +15,9 @@ import CardBody from "components/Card/CardBody.js";
 import axios from '../../service/axiosInstance';
 import {connect} from 'react-redux';
 import {  
-    Button, Modal, ModalHeader, ModalBody, ModalFooter,
+    Modal, ModalHeader, ModalBody, ModalFooter,
     Form, FormGroup, Label, Input
 } from 'reactstrap';
-import ButtonCustom from '../../components/CustomButtons/Button';
 import timeFormat from '../../service/timeFormat';
 const styles = {
   cardCategoryWhite: {
@@ -150,13 +153,13 @@ function Device(props) {
         <img src="/material-dashboard-react/images/tick.svg" alt="" width="25px" />,
         timeFormat(device.timestamp), 
         <div>
-          <Button onClick={()=>toggleModify(device._id, device.license_plate, device.driver, device.line)}  color="success">
+          <ButtonCustom size="sm" onClick={()=>toggleModify(device._id, device.license_plate, device.driver, device.line)} color="success" justIcon>
             <i className="fas fa-wrench"></i>
-          </Button> 
+          </ButtonCustom> 
           {" "}
-          <Button onClick={()=>deleteDevice(device._id)}  color="danger">
+          <ButtonCustom size="sm" onClick={()=>deleteDevice(device._id)} color="danger" justIcon>
             <i className="fas fa-trash-alt"></i>
-          </Button>
+          </ButtonCustom>
         </div>
       ]
     })
@@ -165,7 +168,7 @@ function Device(props) {
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
-      <ButtonCustom  onClick={toggleAdd} color="primary"> + ADD</ButtonCustom>
+      <ButtonCustom size="sm" onClick={toggleAdd} color="primary"> + ADD</ButtonCustom>
         <Card>
           <CardHeader color="primary">
             <h4 className={classes.cardTitleWhite}>Device</h4>
@@ -174,6 +177,7 @@ function Device(props) {
             </p>
           </CardHeader>
           <CardBody>
+            <ButtonCustom size="sm" color="info"><i className="material-icons">save_alt</i>Export Excel</ButtonCustom>
             <Table
               tableHeaderColor="primary"
               tableHead={["ID", "LICENSE PLATE","DRIVER", "LINE", "ACTIVE" , "TIME", "OPTIONS"]}
@@ -221,14 +225,12 @@ function Device(props) {
                     </FormGroup>
                 </Form>
                 <ModalFooter>
-                <Button color="primary" type="submit" onClick={submitForm}>Submit</Button>{' '}
-                <Button color="secondary" onClick={toggle}>Cancel</Button>
+                <ButtonCustom color="primary" type="submit" onClick={submitForm}>Submit</ButtonCustom>{' '}
+                <ButtonCustom color="secondary" onClick={toggle}>Cancel</ButtonCustom>
                 </ModalFooter>
             </ModalBody>
-            
         </Modal>
         </div>
-  
     </GridContainer>
   );
 }

@@ -13,6 +13,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import Button from "components/CustomButtons/Button.js";
 import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -245,6 +246,7 @@ function Dashboard(props) {
               <h4 className={classes.cardTitleWhite}>Customer Stats</h4>
             </CardHeader>
             <CardBody>
+              <Button size="sm" color="info"><i className="material-icons">save_alt</i> Export Excel</Button>
               <Table
                 tableHeaderColor="primary"
                 tableHead={["ID", "State", "Image", "Latitude", "Longtitude", "Age", "Gender", "Bus", "Time"]}
