@@ -193,7 +193,7 @@ function Dashboard(props) {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Daily</h4>
+              <h4 className={classes.cardTitle}>Number of Customers each Day</h4>
               {/* <p className={classes.cardCategory}>
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%
@@ -221,7 +221,7 @@ function Dashboard(props) {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Monthly</h4>
+              <h4 className={classes.cardTitle}>Number of Customers every Months</h4>
               {/* <p className={classes.cardCategory}>
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%
