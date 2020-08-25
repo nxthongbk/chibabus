@@ -57,6 +57,7 @@ function Device(props) {
   const [modal, setModal] = React.useState(false);
   const [license_plate, setLicensePlate] = React.useState("");
   const [driver, setDriver] = React.useState("");
+  const [line, setLine] = React.useState("");
   const [isModify, setModify] = React.useState(false);
   const [deviceIDActive, setDeviceID] = React.useState("");
 
@@ -78,17 +79,19 @@ function Device(props) {
     clearInput();
   }
 
-  const toggleModify = (device_id, license, driver) =>{
+  const toggleModify = (device_id, license, driver, line) =>{
     setModal(!modal);
     setModify(true);
     setDeviceID(device_id);
     setLicensePlate(license);
     setDriver(driver);
+    setLine(line);
   }
 
   const clearInput = () => {
     setDriver("");;
     setLicensePlate("");
+    setLine("");
   }
 
   const submitForm = () =>{
@@ -96,7 +99,8 @@ function Device(props) {
     if(!isModify){
       axios().post('/device',{
         license_plate,
-        driver
+        driver,
+        line
       }).then(()=>{getData()})
       .catch(err=>console.log(err));
       clearInput()
@@ -105,7 +109,8 @@ function Device(props) {
 
     axios().put(`/device/id/${deviceIDActive}`,{
       license_plate,
-      driver
+      driver,
+      line
     }).then(()=>{getData()})
     .catch(err=>console.log(err));
     clearInput()
@@ -119,7 +124,10 @@ function Device(props) {
               setLicensePlate(e.target.value);
               break;
           case 'driver': 
-              setDriver(e.target.value)
+              setDriver(e.target.value);
+              break;
+          case 'line':
+              setLine(e.target.value);
               break;
           default: 
       }
@@ -138,11 +146,11 @@ function Device(props) {
   const showDevices = ()=>{
     const a =props.devices && props.devices.map((device, index)=>{
       return [
-        device._id, device.license_plate, device.driver,
+        device._id, device.license_plate, device.driver, device.line,
         <img src="/material-dashboard-react/images/tick.svg" alt="" width="25px" />,
         timeFormat(device.timestamp), 
         <div>
-          <Button onClick={()=>toggleModify(device._id, device.license_plate, device.driver)}  color="success">
+          <Button onClick={()=>toggleModify(device._id, device.license_plate, device.driver, device.line)}  color="success">
             <i className="fas fa-wrench"></i>
           </Button> 
           {" "}
@@ -168,7 +176,7 @@ function Device(props) {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "LICENSE PLATE","DRIVER", "ACTIVE" , "TIME", "OPTIONS"]}
+              tableHead={["ID", "LICENSE PLATE","DRIVER", "LINE", "ACTIVE" , "TIME", "OPTIONS"]}
               tableData={showDevices()}
             />
           </CardBody>
@@ -199,6 +207,16 @@ function Device(props) {
                             placeholder="Enter driver..." 
                             onChange={inputChange}
                             value={driver}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label>Line</Label>
+                        <Input 
+                            type="text" 
+                            name="line" 
+                            placeholder="Enter line..." 
+                            onChange={inputChange}
+                            value={line}
                         />
                     </FormGroup>
                 </Form>
