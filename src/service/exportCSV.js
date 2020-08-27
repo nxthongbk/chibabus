@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '@material-ui/core/Icon';
 import { CSVLink } from 'react-csv';
 
 export default ({ csvHeader, csvData, fileName }) => {
@@ -8,9 +9,9 @@ export default ({ csvHeader, csvData, fileName }) => {
 				headers={csvHeader}
 				data={csvData}
 				filename={fileName + ".csv"}
-				className="btn btn-primary"
+				className="btn btn-sm btn-primary float-right"
 			>
-				<i className="material-icons">save_alt</i> Export
+				<i class="fas fa-file-export"></i> Export
 			</CSVLink>
 		);
 	};
