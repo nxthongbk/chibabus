@@ -8,6 +8,7 @@ import AccessTime from "@material-ui/icons/AccessTime";
 import AccessibleIcon from '@material-ui/icons/Accessible';
 import PeopleIcon from '@material-ui/icons/People';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import SortIcon from '@material-ui/icons/UnfoldMore';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -69,7 +70,7 @@ function Dashboard(props) {
     await axios().get('/buscounter/statistic/customer_on_day').then(res => customerOnDay = res).catch(err => console.log(err));
     props.updateCustomerOnDay(customerOnDay.data);
 
-    var customerOnMonth;
+    let customerOnMonth;
     await axios().get('/buscounter/statistic/customer_on_month').then(res => customerOnMonth = res).catch(err => console.log(err));
     props.updateCustomerOnMonth(customerOnMonth.data);
   };
@@ -107,6 +108,97 @@ function Dashboard(props) {
     return <img src="/images/get_off_bus.jpg" width="25px" alt="Down" />;
   };
 
+  //sort data by property
+  const sortData = (sortOn) => {
+    let buscounters = props.buscounter;
+    switch (sortOn) {
+      case "state":
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.state.localeCompare(b.state);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.state.localeCompare(a.state);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
+      case "age":
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.age - b.age;
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.age - a.age;
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
+      case "gender":
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.gender - b.gender;
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.gender - a.gender;
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
+      case "bus":
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.device_id.license_plate.localeCompare(b.device_id.license_plate);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.device_id.license_plate.localeCompare(a.device_id.license_plate);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
+      case "time":
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.timestamp.localeCompare(b.timestamp);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.timestamp.localeCompare(a.timestamp);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
+    }
+  };
+
+  //pre-process header for table
+  const state = (<div>State <SortIcon onClick={() => sortData("state")} role="button" /></div>);
+  const age = (<div>Age <SortIcon onClick={() => sortData("age")} role="button" /></div>);
+  const gender = (<div>Gender <SortIcon onClick={() => sortData("gender")} role="button" /></div>);
+  const bus = (<div>Bus <SortIcon onClick={() => sortData("bus")} role="button" /></div>);
+  const time = (<div>Time <SortIcon onClick={() => sortData("time")} role="button" /></div>);
+
+  const showBusCounterHeader = ["ID", state, "Latitude", "Longtitude", age, gender, bus, time, "Image"];
+
   //pre-process data for table
   const showBusCounter = () => {
     const arr = props.buscounter && props.buscounter.map((customer, index) => {
@@ -129,31 +221,13 @@ function Dashboard(props) {
         <img
           src={imgURL}
           onClick={() => customerImage(imgURL)}
-          width="100px" />
+          width="100px"
+          onError={(e) => e.target.src = "/images/load-error.jpg"} />
       ];
     });
     return arr;
   };
-
-  const sortAge = () => {
-    let buscounters = props.buscounter;
-    if(sortState){
-      let busSort = buscounters.sort((a,b)=>{
-        return a.age - b.age
-      })
-      setSortState(!sortState);
-      props.updateBusCounter(busSort)
-    } else {
-      let busSort = buscounters.sort((a,b)=>{
-        return b.age - a.age 
-      })
-      setSortState(!sortState);
-      props.updateBusCounter(busSort)
-    }
-  }
-
-
-  // export csv
+  //export csv
   const csvHeaderData = [
     { label: "ID", key: "_id" },
     { label: "STATE", key: "state" },
@@ -188,9 +262,7 @@ function Dashboard(props) {
   const customerImage = (imageURL) => {
     setModal(!modal);
     setImageURL(imageURL);
-  }
-
-  const age = (<div>Age <button onClick={sortAge}><i className="fas fa-home"></i></button> </div>)
+  };
 
   if(!props.isLogin) return <Redirect to="/login" />
   return (
@@ -335,7 +407,7 @@ function Dashboard(props) {
               <ExportCSV csvHeader={csvHeaderData} csvData={csvBodyData()} fileName="Customer_Stats" />
               <Table
                 tableHeaderColor="primary"
-                tableHead={["ID", "State", "Latitude", "Longtitude", age, "Gender", "Bus", "Time", "Image"]}
+                tableHead={showBusCounterHeader}
                 tableData={showBusCounter()}
               />
             </CardBody>
@@ -349,7 +421,7 @@ function Dashboard(props) {
           </ModalHeader>
           <ModalBody>
             <Card>
-              <img top width="100%" src={imageURL} alt="Customer Image" onError={(e) => e.target.src = "/images/upload-failed.jpg"} />
+              <img top width="100%" src={imageURL} alt="Customer Image" />
             </Card>
             <ModalFooter>
               <Button color="secondary" onClick={toggle}>Close</Button>

@@ -14,6 +14,7 @@ import {
   Modal, ModalHeader, ModalBody, ModalFooter,
   Form, FormGroup, Label, Input
 } from 'reactstrap';
+import SortIcon from '@material-ui/icons/UnfoldMore';
 import axios from '../../service/axiosInstance';
 import { connect } from 'react-redux';
 
@@ -64,6 +65,7 @@ function Device(props) {
   const [line, setLine] = React.useState("");
   const [isModify, setModify] = React.useState(false);
   const [deviceIDActive, setDeviceID] = React.useState("");
+  const [sortState, setSortState] = React.useState(true);
 
   const getData = async () => {
     let listofdevices;
@@ -148,6 +150,82 @@ function Device(props) {
     }
   };
 
+  //sort data by property
+  const sortData = (sortOn) => {
+    let devices = props.devices;
+    switch (sortOn) {
+      case "license_plate":
+        if (sortState) {
+          let dvSort = devices.sort((a, b) => {
+            return a.license_plate.localeCompare(b.license_plate);
+          })
+          setSortState(!sortState);
+          props.updateDevice(dvSort);
+        } else {
+          let dvSort = devices.sort((a, b) => {
+            return b.license_plate.localeCompare(a.license_plate);
+          })
+          setSortState(!sortState);
+          props.updateDevice(dvSort);
+        }
+        break;
+      case "driver":
+        if (sortState) {
+          let dvSort = devices.sort((a, b) => {
+            return a.driver.localeCompare(b.driver);
+          })
+          setSortState(!sortState);
+          props.updateDevice(dvSort);
+        } else {
+          let dvSort = devices.sort((a, b) => {
+            return b.driver.localeCompare(a.driver);
+          })
+          setSortState(!sortState);
+          props.updateDevice(dvSort);
+        }
+        break;
+      case "line":
+        if (sortState) {
+          let dvSort = devices.sort((a, b) => {
+            return a.line.localeCompare(b.line);
+          })
+          setSortState(!sortState);
+          props.updateDevice(dvSort);
+        } else {
+          let dvSort = devices.sort((a, b) => {
+            return b.line.localeCompare(a.line);
+          })
+          setSortState(!sortState);
+          props.updateDevice(dvSort);
+        }
+        break;
+      case "time":
+        if (sortState) {
+          let dvSort = devices.sort((a, b) => {
+            return a.timestamp.localeCompare(b.timestamp);
+          })
+          setSortState(!sortState);
+          props.updateDevice(dvSort);
+        } else {
+          let dvSort = devices.sort((a, b) => {
+            return b.timestamp.localeCompare(a.timestamp);
+          })
+          setSortState(!sortState);
+          props.updateDevice(dvSort);
+        }
+        break;
+    }
+  };
+
+  //pre-process header for table
+  const licensePlateHeader = (<div>LICENSE PLATE <SortIcon onClick={() => sortData("license_plate")} role="button" /></div>);
+  const driverHEeader = (<div>DRIVER <SortIcon onClick={() => sortData("driver")} role="button" /></div>);
+  const lineHeader = (<div>LINE <SortIcon onClick={() => sortData("line")} role="button" /></div>);
+  const timeHeader = (<div>TIME <SortIcon onClick={() => sortData("time")} role="button" /></div>);
+
+  const showBusCounterHeader = ["ID", licensePlateHeader, driverHEeader, lineHeader, "ACTIVE", timeHeader, "OPTIONS"];
+
+  //pre-process data for table
   const showDevices = () => {
     const a = props.devices && props.devices.map((device, index) => {
       return [
@@ -203,7 +281,7 @@ function Device(props) {
             <ExportCSV csvHeader={csvHeaderData} csvData={csvBodyData()} fileName="Devices" />
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "LICENSE PLATE", "DRIVER", "LINE", "ACTIVE", "TIME", "OPTIONS"]}
+              tableHead={showBusCounterHeader}
               tableData={showDevices()}
             />
           </CardBody>
