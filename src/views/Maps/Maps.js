@@ -1,7 +1,7 @@
 import React from "react";
 import { Map, Marker, Popup, TileLayer } from "react-leaflet";
 
-export default function Maps() {
+export default () => {
   const [latlng, setLatlng] = React.useState({lat: 10.8564835,lng: 106.6312885})
   const [popup, setPopup] = React.useState("TMA Innovation")
   const [hasLocation, setHasLocation] = React.useState(true)
