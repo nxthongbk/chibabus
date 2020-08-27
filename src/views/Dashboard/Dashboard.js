@@ -69,7 +69,7 @@ function Dashboard(props) {
     await axios().get('/buscounter/statistic/customer_on_day').then(res => customerOnDay = res).catch(err => console.log(err));
     props.updateCustomerOnDay(customerOnDay.data);
 
-    var customerOnMonth;
+    let customerOnMonth;
     await axios().get('/buscounter/statistic/customer_on_month').then(res => customerOnMonth = res).catch(err => console.log(err));
     props.updateCustomerOnMonth(customerOnMonth.data);
   };
@@ -106,26 +106,86 @@ function Dashboard(props) {
     }
     return <img src="/images/get_off_bus.jpg" width="25px" alt="Down" />;
   };
-  
-  //sort
+
+  //sort data by property
   const sortData = (sortOn) => {
     let buscounters = props.buscounter;
     switch (sortOn) {
       case "state":
-        
-    }
-    if (sortState) {
-      let busSort = buscounters.sort((a, b) => {
-        return a.age - b.age;
-      })
-      setSortState(!sortState);
-      props.updateBusCounter(busSort);
-    } else {
-      let busSort = buscounters.sort((a, b) => {
-        return b.age - a.age;
-      })
-      setSortState(!sortState);
-      props.updateBusCounter(busSort);
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.state.localeCompare(b.state);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.state.localeCompare(a.state);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
+      case "age":
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.age - b.age;
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.age - a.age;
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
+      case "gender":
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.gender - b.gender;
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.gender - a.gender;
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
+      case "bus":
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.device_id.license_plate.localeCompare(b.device_id.license_plate);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.device_id.license_plate.localeCompare(a.device_id.license_plate);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
+      case "time":
+        if (sortState) {
+          let busSort = buscounters.sort((a, b) => {
+            return a.timestamp.localeCompare(b.timestamp);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        } else {
+          let busSort = buscounters.sort((a, b) => {
+            return b.timestamp.localeCompare(a.timestamp);
+          })
+          setSortState(!sortState);
+          props.updateBusCounter(busSort);
+        }
+        break;
     }
   };
 
@@ -135,6 +195,8 @@ function Dashboard(props) {
   const gender = (<div>Gender <SortIcon onClick={() => sortData("gender")} role="button" /></div>);
   const bus = (<div>Bus <SortIcon onClick={() => sortData("bus")} role="button" /></div>);
   const time = (<div>Time <SortIcon onClick={() => sortData("time")} role="button" /></div>);
+
+  const showBusCounterHeader = ["ID", state, "Latitude", "Longtitude", age, gender, bus, time, "Image"];
 
   //pre-process data for table
   const showBusCounter = () => {
@@ -346,7 +408,7 @@ function Dashboard(props) {
               <ExportCSV csvHeader={csvHeaderData} csvData={csvBodyData()} fileName="Customer_Stats" />
               <Table
                 tableHeaderColor="primary"
-                tableHead={["ID", "State", "Latitude", "Longtitude", age, "Gender", "Bus", "Time", "Image"]}
+                tableHead={showBusCounterHeader}
                 tableData={showBusCounter()}
               />
             </CardBody>
