@@ -30,6 +30,7 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 // services
 import axios from "service/axiosInstance";
 import timeFormat from '../../service/timeFormat';
+import ExportCSV from '../../service/exportCSV';
 
 const useStyles = makeStyles(styles);
 
@@ -85,26 +86,54 @@ function Dashboard(props) {
   //convert state from text to icon 
   const customerState = (state) => {
     if (state === "up") {
-      return <img src="/material-dashboard-react/images/get_on_bus.jpg" width="25px" alt="Up" />;
+      return <img src="/images/get_on_bus.jpg" width="25px" alt="Up" />;
     }
-    return <img src="/material-dashboard-react/images/get_off_bus.jpg" width="25px" alt="Down" />;
+    return <img src="/images/get_off_bus.jpg" width="25px" alt="Down" />;
   };
 
   const showBusCounter = () => {
-    const a = props.buscounter && props.buscounter.map((customer, index) => {
+    const arr = props.buscounter && props.buscounter.map((customer, index) => {
       return [
         customer._id,
         customerState(customer.state),
-        customer.image,
         customer.lat,
         customer.long,
         customer.age,
         customer.gender ? "Male" : "Female",
         customer.device_id.license_plate,
-        timeFormat(customer.timestamp)
+        timeFormat(customer.timestamp),
+        customer.image
       ];
     });
-    return a;
+    return arr;
+  };
+
+  const csvHeaderData = [
+    {label: "ID", key: "_id"},
+    {label: "STATE", key: "state"},
+    {label: "LATITUDE", key: "lat"},
+    {label: "LONGTITUDE", key: "long"},
+    {label: "AGE", key: "age"},
+    {label: "GENDER", key: "gender"},
+    {label: "BUS", key: "bus"},
+    {label: "TIME", key: "time"},
+    {label: "IMAGE", key: "image"}
+  ];
+  const csvBodyData = () => {
+    const arr = props.buscounter.map((customer, index) => {
+      return {
+        "_id": customer._id,
+        "state": customer.state,
+        "lat": customer.lat,
+        "long": customer.long,
+        "age": customer.age,
+        "gender": customer.gender ? "Male" : "Female",
+        "bus": customer.device_id.license_plate,
+        "time": timeFormat(customer.timestamp),
+        "image": "http://labtma.com:7010/uploads/" + customer.image
+      }
+    });
+    return arr;
   };
 
   return (
@@ -246,10 +275,10 @@ function Dashboard(props) {
               <h4 className={classes.cardTitleWhite}>Customer Stats</h4>
             </CardHeader>
             <CardBody>
-              <Button size="sm" color="info"><i className="material-icons">save_alt</i> Export Excel</Button>
+              <ExportCSV csvHeader={csvHeaderData} csvData={csvBodyData()} fileName="Customer_Stats" />
               <Table
                 tableHeaderColor="primary"
-                tableHead={["ID", "State", "Image", "Latitude", "Longtitude", "Age", "Gender", "Bus", "Time"]}
+                tableHead={["ID", "State", "Latitude", "Longtitude", "Age", "Gender", "Bus", "Time", "Image"]}
                 tableData={showBusCounter()}
               />
             </CardBody>
