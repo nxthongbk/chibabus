@@ -21,7 +21,7 @@ html, body {
 
 .login-background{
     height: 700px;
-    background: url("/material-dashboard-react/images/bus_background.jpg") no-repeat center center;;
+    background: url("/images/bus_background.jpg") no-repeat center center;;
 }
 
 #loginbox{
