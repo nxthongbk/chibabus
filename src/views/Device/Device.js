@@ -1,23 +1,22 @@
 import React, { useEffect } from "react";
 // @material-ui/icon
-import DeleteIcon from '@material-ui/icons/Delete';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Button from '@material-ui/core/Button';
 import ButtonCustom from "components/CustomButtons/Button.js";
 import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import axios from '../../service/axiosInstance';
-import { connect } from 'react-redux';
 import {
   Modal, ModalHeader, ModalBody, ModalFooter,
   Form, FormGroup, Label, Input
 } from 'reactstrap';
+import axios from '../../service/axiosInstance';
+import { connect } from 'react-redux';
+
 // services
 import timeFormat from '../../service/timeFormat';
 import ExportCSV from '../../service/exportCSV';

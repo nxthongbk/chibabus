@@ -20,7 +20,11 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import {connect} from 'react-redux';
+import { CardImg } from 'reactstrap';
+import {
+  Modal, ModalHeader, ModalBody, ModalFooter
+} from 'reactstrap';
+import { connect } from 'react-redux';
 // chart data
 import {
   dailyCustomerChart,
@@ -36,7 +40,12 @@ const useStyles = makeStyles(styles);
 
 function Dashboard(props) {
   const classes = useStyles();
+  const {
+    className
+  } = props;
 
+  const [modal, setModal] = React.useState(false);
+  const [imageURL, setImageURL] = React.useState("");
   const [totalCustomer, setTotalCustomer] = React.useState(0);
   const [todayCustomer, setTodayCustomer] = React.useState(0);
   const [customerLeftToday, setCustomerLeftToday] = React.useState(0);
@@ -46,10 +55,11 @@ function Dashboard(props) {
     getData();
   }, []);
 
+  //get data from server
   const getData = async () => {
     var buscounter = await axios().get('/buscounter');
     props.updateBusCounter(buscounter.data);
-    setTotalCustomer(Math.round(buscounter.data.length/2));
+    setTotalCustomer(Math.round(buscounter.data.length / 2));
     customerToday(buscounter.data);
 
     var customerOnDay = await axios().get('/buscounter/statistic/customer_on_day');
@@ -59,6 +69,7 @@ function Dashboard(props) {
     props.updateCustomerOnMonth(customerOnMonth.data);
   };
 
+  //pre-process data for card info
   const datesAreOnSameDay = (first, second) =>
     first.getFullYear() === second.getFullYear() &&
     first.getMonth() === second.getMonth() &&
@@ -91,8 +102,16 @@ function Dashboard(props) {
     return <img src="/images/get_off_bus.jpg" width="25px" alt="Down" />;
   };
 
+  //pre-process data for table
   const showBusCounter = () => {
     const arr = props.buscounter && props.buscounter.map((customer, index) => {
+      //handle image
+      let imgURL;
+      if (customer.image === "unknow_image")
+        imgURL = "/images/upload-failed.jpg";
+      else
+        imgURL = "http://labtma.com:7010/uploads/" + customer.image;
+
       return [
         customer._id,
         customerState(customer.state),
@@ -102,22 +121,26 @@ function Dashboard(props) {
         customer.gender ? "Male" : "Female",
         customer.device_id.license_plate,
         timeFormat(customer.timestamp),
-        customer.image
+        <img
+          src={imgURL}
+          onClick={() => customerImage(imgURL)}
+          width="100px" />
       ];
     });
     return arr;
   };
 
+  // export csv
   const csvHeaderData = [
-    {label: "ID", key: "_id"},
-    {label: "STATE", key: "state"},
-    {label: "LATITUDE", key: "lat"},
-    {label: "LONGTITUDE", key: "long"},
-    {label: "AGE", key: "age"},
-    {label: "GENDER", key: "gender"},
-    {label: "BUS", key: "bus"},
-    {label: "TIME", key: "time"},
-    {label: "IMAGE", key: "image"}
+    { label: "ID", key: "_id" },
+    { label: "STATE", key: "state" },
+    { label: "LATITUDE", key: "lat" },
+    { label: "LONGTITUDE", key: "long" },
+    { label: "AGE", key: "age" },
+    { label: "GENDER", key: "gender" },
+    { label: "BUS", key: "bus" },
+    { label: "TIME", key: "time" },
+    { label: "IMAGE", key: "image" }
   ];
   const csvBodyData = () => {
     const arr = props.buscounter.map((customer, index) => {
@@ -135,6 +158,13 @@ function Dashboard(props) {
     });
     return arr;
   };
+
+  //toggle customer image
+  const toggle = () => setModal(!modal);
+  const customerImage = (imageURL) => {
+    setModal(!modal);
+    setImageURL(imageURL);
+  }
 
   return (
     <div>
@@ -285,6 +315,21 @@ function Dashboard(props) {
           </Card>
         </GridItem>
       </GridContainer>
+      <div>
+        <Modal isOpen={modal} toggle={toggle} className={className}>
+          <ModalHeader toggle={toggle}>
+            Customer Image
+          </ModalHeader>
+          <ModalBody>
+            <Card>
+              <img top width="100%" src={imageURL} alt="Customer Image" onError={(e) => e.target.src = "/images/upload-failed.jpg"} />
+            </Card>
+            <ModalFooter>
+              <Button color="secondary" onClick={toggle}>Close</Button>
+            </ModalFooter>
+          </ModalBody>
+        </Modal>
+      </div>
     </div>
   );
 }
@@ -296,17 +341,17 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-  updateCustomerOnDay : (customeronday) => {
-    dispatch({type:"UPDATE_CUSTOMERONDAY", customeronday});
-  },
-  
-  updateCustomerOnMonth : (customeronmonth) => {
-    dispatch({type:"UPDATE_CUSTOMERONMONTH", customeronmonth});
+  updateCustomerOnDay: (customeronday) => {
+    dispatch({ type: "UPDATE_CUSTOMERONDAY", customeronday });
   },
 
-  updateBusCounter : (buscounter) => {
-    dispatch({type:"UPDATE_BUSCOUNTER", buscounter});
+  updateCustomerOnMonth: (customeronmonth) => {
+    dispatch({ type: "UPDATE_CUSTOMERONMONTH", customeronmonth });
+  },
+
+  updateBusCounter: (buscounter) => {
+    dispatch({ type: "UPDATE_BUSCOUNTER", buscounter });
   }
 });
 
-export default connect(mapState,mapDispatch)(Dashboard)
+export default connect(mapState, mapDispatch)(Dashboard)

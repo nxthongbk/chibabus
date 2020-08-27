@@ -1,6 +1,5 @@
-import React from 'react'
-import { CSVLink } from 'react-csv'
-import Button from "components/CustomButtons/Button.js";
+import React from 'react';
+import { CSVLink } from 'react-csv';
 
 export default ({ csvHeader, csvData, fileName }) => {
 	if (csvHeader && csvData) {
