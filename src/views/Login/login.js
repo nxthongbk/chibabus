@@ -1,14 +1,14 @@
 import React from "react";
 import axios from "axios";
 import { Link, Redirect, Switch } from "react-router-dom";
-import {login_url} from '../../service/constant'
+import {login_url} from '../../service/constant';
+import {connect} from 'react-redux';
 class Login extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			email: "",
 			password: "",
-			loggined: false,
 			error: "",
 			load: false,
 		};
@@ -44,8 +44,8 @@ class Login extends React.Component {
 				console.log(res);
 				if (res.data.auth) {
 					localStorage.setItem("token", res.data.token);
+					this.props.setLogin(true)
 					this.setState({
-						loggined: true,
 						load: false,
 					});
 				}
@@ -67,7 +67,7 @@ class Login extends React.Component {
 	};
 
 	render() {
-		if (this.state.loggined === true) return <Redirect to="/" />;
+		if (this.props.isLogin === true) return <Redirect to="/" />;
 		return (
 			<div className="container-fluid login-background">
 				<div className="row">
@@ -192,4 +192,15 @@ class Login extends React.Component {
 		);
 	}
 }
-export default Login;
+
+const mapState = state => ({
+ isLogin: state.isLogin
+})
+
+const mapDispatch = dispatch => ({
+ setLogin: (login)=>{
+	 dispatch({type:"SET_LOGIN",login})
+ }
+})
+
+export default connect(mapState, mapDispatch)(Login) ;

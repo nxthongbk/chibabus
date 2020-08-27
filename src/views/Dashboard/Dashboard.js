@@ -18,6 +18,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import {Redirect} from 'react-router-dom';
 import {
   Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
@@ -191,6 +192,7 @@ function Dashboard(props) {
 
   const age = (<div>Age <button onClick={sortAge}><i className="fas fa-home"></i></button> </div>)
 
+  if(!props.isLogin) return <Redirect to="/login" />
   return (
     <div>
       <GridContainer>
@@ -360,6 +362,7 @@ function Dashboard(props) {
 }
 
 const mapState = state => ({
+  isLogin: state.isLogin,
   buscounter: state.buscounter,
   customeronday: state.customeronday,
   customeronmonth: state.customeronmonth
