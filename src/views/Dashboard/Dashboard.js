@@ -50,6 +50,7 @@ function Dashboard(props) {
   const [todayCustomer, setTodayCustomer] = React.useState(0);
   const [customerLeftToday, setCustomerLeftToday] = React.useState(0);
   const [upTime, setUpTime] = React.useState();
+  const [sortState, setSortState] = React.useState(true);
 
   useEffect(() => {
     getData();
@@ -133,6 +134,26 @@ function Dashboard(props) {
     return arr;
   };
 
+  const sortAge = () => {
+    let buscounters = props.buscounter;
+    if(sortState){
+      let busSort = buscounters.sort((a,b)=>{
+        return a.age - b.age
+      })
+      setSortState(!sortState);
+      props.updateBusCounter(busSort)
+    } else {
+      let busSort = buscounters.sort((a,b)=>{
+        return b.age - a.age 
+      })
+      setSortState(!sortState);
+      props.updateBusCounter(busSort)
+    }
+    
+    
+  }
+
+
   // export csv
   const csvHeaderData = [
     { label: "ID", key: "_id" },
@@ -169,6 +190,8 @@ function Dashboard(props) {
     setModal(!modal);
     setImageURL(imageURL);
   }
+
+  const age = (<div>Age <button onClick={sortAge}><i className="fas fa-home"></i></button> </div>)
 
   return (
     <div>
@@ -312,7 +335,7 @@ function Dashboard(props) {
               <ExportCSV csvHeader={csvHeaderData} csvData={csvBodyData()} fileName="Customer_Stats" />
               <Table
                 tableHeaderColor="primary"
-                tableHead={["ID", "State", "Latitude", "Longtitude", "Age", "Gender", "Bus", "Time", "Image"]}
+                tableHead={["ID", "State", "Latitude", "Longtitude", age, "Gender", "Bus", "Time", "Image"]}
                 tableData={showBusCounter()}
               />
             </CardBody>
