@@ -10,6 +10,7 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import {Redirect} from 'react-router-dom';
 import {
   Modal, ModalHeader, ModalBody, ModalFooter,
   Form, FormGroup, Label, Input
@@ -69,7 +70,13 @@ function Device(props) {
 
   const getData = async () => {
     let listofdevices;
-    await axios().get('/device').then(res => listofdevices = res).catch(err => console.log(err));
+    await axios().get('/device')
+    .then(res => listofdevices = res)
+    .catch(err => {
+      if(err.response && err.response.status===401){
+        props.setLogin(false)
+      }
+    });
     props.updateDevice(listofdevices.data)
   };
 
@@ -265,7 +272,7 @@ function Device(props) {
     });
     return arr;
   };
-
+  if(!props.isLogin) return <Redirect to="/login" />
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -336,11 +343,16 @@ function Device(props) {
   );
 }
 const mapState = state => ({
-  devices: state.devices
-})
+  devices: state.devices,
+  isLogin: state.isLogin
+});
+
 const mapDispatch = dispatch => ({
   updateDevice: (devices) => {
     dispatch({ type: "UPDATE_DEVICE", devices })
+  },
+  setLogin : (login) =>{
+    dispatch({type: "SET_LOGIN", login})
   }
 })
 

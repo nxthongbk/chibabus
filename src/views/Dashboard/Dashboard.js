@@ -61,17 +61,27 @@ function Dashboard(props) {
   //get data from server
   const getData = async () => {
     let buscounter;
-    await axios().get('/buscounter').then(res => buscounter = res).catch(err => console.log(err));
+    await axios().get('/buscounter')
+    .then(res => buscounter = res)
+    .catch(err => {
+      if(err.response && err.response.status===401){
+        props.setLogin(false)
+      }
+    });
     props.updateBusCounter(buscounter.data);
     setTotalCustomer(Math.round(buscounter.data.length / 2));
     customerToday(buscounter.data);
 
     let customerOnDay;
-    await axios().get('/buscounter/statistic/customer_on_day').then(res => customerOnDay = res).catch(err => console.log(err));
+    await axios().get('/buscounter/statistic/customer_on_day')
+    .then(res => customerOnDay = res)
+    .catch(err => {});
     props.updateCustomerOnDay(customerOnDay.data);
 
     let customerOnMonth;
-    await axios().get('/buscounter/statistic/customer_on_month').then(res => customerOnMonth = res).catch(err => console.log(err));
+    await axios().get('/buscounter/statistic/customer_on_month')
+    .then(res => customerOnMonth = res)
+    .catch(err => console.log(err));
     props.updateCustomerOnMonth(customerOnMonth.data);
   };
 
@@ -451,7 +461,12 @@ const mapDispatch = dispatch => ({
 
   updateBusCounter: (buscounter) => {
     dispatch({ type: "UPDATE_BUSCOUNTER", buscounter });
+  },
+
+  setLogin : (login)=>{
+    dispatch({type:"SET_LOGIN", login})
   }
+
 });
 
 export default connect(mapState, mapDispatch)(Dashboard)

@@ -27,6 +27,10 @@ class Login extends React.Component {
 		if (localStorage.getItem("token")) return true;
 		return false;
 	};
+	
+	componentWillMount(){
+		this.props.setLogin(false)
+	}
 
 	onSubmit = async (e) => {
 		e.preventDefault();

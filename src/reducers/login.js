@@ -1,4 +1,4 @@
-let initialState = false;
+let initialState = true;
 const myReducer = (state= initialState, action) =>{
     switch (action.type){
         case "SET_LOGIN":{
