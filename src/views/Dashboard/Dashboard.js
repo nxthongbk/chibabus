@@ -149,8 +149,6 @@ function Dashboard(props) {
       setSortState(!sortState);
       props.updateBusCounter(busSort)
     }
-    
-    
   }
 
 
