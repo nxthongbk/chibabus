@@ -185,13 +185,13 @@ function Dashboard(props) {
       case "time":
         if (sortState) {
           let busSort = buscounters.sort((a, b) => {
-            return a.timestamp.localeCompare(b.timestamp);
+            return new Date(a.timestamp)-new Date(b.timestamp);
           })
           setSortState(!sortState);
           props.updateBusCounter(busSort);
         } else {
           let busSort = buscounters.sort((a, b) => {
-            return b.timestamp.localeCompare(a.timestamp);
+            return new Date(b.timestamp)-new Date(a.timestamp);
           })
           setSortState(!sortState);
           props.updateBusCounter(busSort);
