@@ -1,6 +1,4 @@
 import React, { useEffect } from "react";
-// react plugin for creating charts
-import ChartistGraph from "react-chartist";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
@@ -20,11 +18,13 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import { CardImg } from 'reactstrap';
 import {
   Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
+// redux
 import { connect } from 'react-redux';
+// react plugin for creating charts
+import ChartistGraph from "react-chartist";
 // chart data
 import {
   dailyCustomerChart,
@@ -57,15 +57,18 @@ function Dashboard(props) {
 
   //get data from server
   const getData = async () => {
-    var buscounter = await axios().get('/buscounter');
+    let buscounter;
+    await axios().get('/buscounter').then(res => buscounter = res).catch(err => console.log(err));
     props.updateBusCounter(buscounter.data);
     setTotalCustomer(Math.round(buscounter.data.length / 2));
     customerToday(buscounter.data);
 
-    var customerOnDay = await axios().get('/buscounter/statistic/customer_on_day');
+    let customerOnDay;
+    await axios().get('/buscounter/statistic/customer_on_day').then(res => customerOnDay = res).catch(err => console.log(err));
     props.updateCustomerOnDay(customerOnDay.data);
 
-    var customerOnMonth = await axios().get('/buscounter/statistic/customer_on_month');
+    var customerOnMonth;
+    await axios().get('/buscounter/statistic/customer_on_month').then(res => customerOnMonth = res).catch(err => console.log(err));
     props.updateCustomerOnMonth(customerOnMonth.data);
   };
 
@@ -142,6 +145,7 @@ function Dashboard(props) {
     { label: "TIME", key: "time" },
     { label: "IMAGE", key: "image" }
   ];
+
   const csvBodyData = () => {
     const arr = props.buscounter.map((customer, index) => {
       return {
@@ -253,7 +257,7 @@ function Dashboard(props) {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Number of Customers each Day</h4>
+              <h4 className={classes.cardTitle}>Amount of Customer in past 7 days</h4>
               {/* <p className={classes.cardCategory}>
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%
@@ -281,7 +285,7 @@ function Dashboard(props) {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Number of Customers every Months</h4>
+              <h4 className={classes.cardTitle}>Total Customers per Month</h4>
               {/* <p className={classes.cardCategory}>
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%

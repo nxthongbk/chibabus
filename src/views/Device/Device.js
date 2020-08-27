@@ -66,8 +66,9 @@ function Device(props) {
   const [deviceIDActive, setDeviceID] = React.useState("");
 
   const getData = async () => {
-    var data = await axios().get('/device')
-    props.updateDevice(data.data)
+    let listofdevices;
+    await axios().get('/device').then(res => listofdevices = res).catch(err => console.log(err));
+    props.updateDevice(listofdevices.data)
   };
 
   useEffect(() => {
