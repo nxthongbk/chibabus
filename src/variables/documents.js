@@ -1,9 +1,9 @@
 const loginAPI = () => {
 	const data = {
 		name: "LOGIN",
-		method: "PUT",
+		method: "POST",
 		path: "/api/login",
-		des: "API to login the website",
+		des: "Login website",
 		header: {
 
 		},
@@ -22,6 +22,34 @@ const loginAPI = () => {
 	return data;
 };
 
+const getUserInfoAPI = () => {
+	const data = {
+		name: "GET USER INFO",
+		method: "GET",
+		path: "/api/user",
+		des: "Get user information on website",
+		header: {
+			Authorization: "Bearer XXXXX.YYYYY.ZZZZ"
+		},
+		body: {
+
+		},
+		success: {
+			_id: "exampleID",
+			email: "example@tma.com",
+			password: "example",
+			name: "example Name",
+			timestamp: "example Time",
+			__v: 0
+		},
+		error: {
+
+		}
+	};
+	return data;
+}
+
 module.exports = {
 	loginAPI,
+	getUserInfoAPI,
 };
