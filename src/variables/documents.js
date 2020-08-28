@@ -1,7 +1,7 @@
 const loginAPI = () => {
 	const data = {
 		name: "LOGIN",
-		method: "GET",
+		method: "PUT",
 		path: "/api/login",
 		des: "API to login the website",
 		header: {

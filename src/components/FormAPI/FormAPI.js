@@ -117,7 +117,8 @@ FormAPI.propTypes = {
     "warning",
     "danger",
     "rose",
-    "white",
+		"white",
+		"blue",
     "transparent"
   ]),
   size: PropTypes.oneOf(["sm", "lg"]),
