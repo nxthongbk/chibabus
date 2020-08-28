@@ -19,16 +19,19 @@ import { Collapse } from 'reactstrap';
 import { connect } from 'react-redux';
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 // document data
-import { loginAPI } from '../../variables/documents';
+import { loginAPI, getUserInfoAPI } from '../../variables/documents';
 
 const useStyles = makeStyles(styles);
 
 function Documentation(props) {
 	const classes = useStyles();
+	
+	// must add all APIs to this list
+	const APIList = [loginAPI(), getUserInfoAPI()];
 
-	const methodColor = () => {
-		const result = loginAPI().method;
-		switch (result) {
+	// detect color for each method
+	const methodColor = (method) => {;
+		switch (method) {
 			case "GET":
 				return "success";
 			case "PUT":
@@ -40,14 +43,21 @@ function Documentation(props) {
 			default:
 				return "white";
 		}
-	};
+	};	
+
+	// show all APIs
+	const showAPIList = APIList.map((api, index) => {
+		return (
+			<FormAPI
+				color={methodColor(api.method)}
+				APIdata={api}
+			></FormAPI>
+		);
+	});
 
 	if (!props.isLogin) return <Redirect to="/login" />
 	return (<div>
-		<FormAPI
-			color={methodColor()}
-			APIdata={loginAPI()}
-		></FormAPI>
+		{showAPIList}
 	</div>)
 }
 

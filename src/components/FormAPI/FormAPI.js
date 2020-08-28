@@ -20,35 +20,35 @@ import styles from "assets/jss/material-dashboard-react/components/buttonStyle.j
 const useStyles = makeStyles(styles);
 
 export default function FormAPI(props) {
-  const classes = useStyles();
-  const {
-    color,
-    round,
-    children,
-    disabled,
-    simple,
-    size,
-    block,
-    link,
-    justIcon,
-    className,
+	const classes = useStyles();
+	const {
+		color,
+		round,
+		children,
+		disabled,
+		simple,
+		size,
+		block,
+		link,
+		justIcon,
+		className,
 		muiClasses,
 		APIdata,
-    ...rest
-  } = props;
-  const btnClasses = classNames({
-    [classes.button]: true,
-    [classes[size]]: size,
-    [classes[color]]: color,
-    [classes.round]: round,
-    [classes.disabled]: disabled,
-    [classes.simple]: simple,
-    [classes.block]: block,
-    [classes.link]: link,
-    [classes.justIcon]: justIcon,
-    [className]: className
+		...rest
+	} = props;
+	const btnClasses = classNames({
+		[classes.button]: true,
+		[classes[size]]: size,
+		[classes[color]]: color,
+		[classes.round]: round,
+		[classes.disabled]: disabled,
+		[classes.simple]: simple,
+		[classes.block]: block,
+		[classes.link]: link,
+		[classes.justIcon]: justIcon,
+		[className]: className
 	});
-	
+
 	const [isOpen, setIsOpen] = React.useState(false);
 
 	const toggle = () => setIsOpen(!isOpen);
@@ -56,8 +56,6 @@ export default function FormAPI(props) {
 	const dataHandler = (data) => {
 		if (data) {
 			const result = Object.entries(data).map(([key, value]) => {
-				console.log(key);
-				console.log(value);
 				return (
 					<div>{key}: {value},</div>
 				);
@@ -66,10 +64,10 @@ export default function FormAPI(props) {
 		}
 	};
 
-  return (<div>
-    <Button {...rest} classes={muiClasses} className={btnClasses} onClick={toggle} >
-      {APIdata.name}
-    </Button>
+	return (<div>
+		<Button {...rest} classes={muiClasses} className={btnClasses} onClick={toggle} >
+			{APIdata.name}
+		</Button>
 		<Collapse isOpen={isOpen}>
 			<Card>
 				<CardHeader color={color}>
@@ -110,27 +108,27 @@ export default function FormAPI(props) {
 }
 
 FormAPI.propTypes = {
-  color: PropTypes.oneOf([
-    "primary",
-    "info",
-    "success",
-    "warning",
-    "danger",
-    "rose",
+	color: PropTypes.oneOf([
+		"primary",
+		"info",
+		"success",
+		"warning",
+		"danger",
+		"rose",
 		"white",
 		"blue",
-    "transparent"
-  ]),
-  size: PropTypes.oneOf(["sm", "lg"]),
-  simple: PropTypes.bool,
-  round: PropTypes.bool,
-  disabled: PropTypes.bool,
-  block: PropTypes.bool,
-  link: PropTypes.bool,
-  justIcon: PropTypes.bool,
-  className: PropTypes.string,
-  // use this to pass the classes props from Material-UI
-  muiClasses: PropTypes.object,
+		"transparent"
+	]),
+	size: PropTypes.oneOf(["sm", "lg"]),
+	simple: PropTypes.bool,
+	round: PropTypes.bool,
+	disabled: PropTypes.bool,
+	block: PropTypes.bool,
+	link: PropTypes.bool,
+	justIcon: PropTypes.bool,
+	className: PropTypes.string,
+	// use this to pass the classes props from Material-UI
+	muiClasses: PropTypes.object,
 	children: PropTypes.node,
 	APIdata: PropTypes.object
 };
