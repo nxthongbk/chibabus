@@ -26,10 +26,26 @@ const useStyles = makeStyles(styles);
 function Documentation(props) {
 	const classes = useStyles();
 
+	const methodColor = () => {
+		const result = loginAPI().method;
+		switch (result) {
+			case "GET":
+				return "success";
+			case "PUT":
+				return "blue";
+			case "DELETE":
+				return "danger";
+			case "POST":
+				return "warning";
+			default:
+				return "white";
+		}
+	};
+
 	if (!props.isLogin) return <Redirect to="/login" />
 	return (<div>
 		<FormAPI
-			color="success"
+			color={methodColor()}
 			APIdata={loginAPI()}
 		></FormAPI>
 	</div>)
