@@ -1,4 +1,8 @@
 import React, { useEffect } from "react";
+import {Redirect} from 'react-router-dom';
+import {
+  Modal, ModalHeader, ModalBody, ModalFooter
+} from 'reactstrap';
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
@@ -19,10 +23,6 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import {Redirect} from 'react-router-dom';
-import {
-  Modal, ModalHeader, ModalBody, ModalFooter
-} from 'reactstrap';
 // redux
 import { connect } from 'react-redux';
 // react plugin for creating charts
@@ -185,13 +185,13 @@ function Dashboard(props) {
       case "time":
         if (sortState) {
           let busSort = buscounters.sort((a, b) => {
-            return new Date(a.timestamp)-new Date(b.timestamp);
+            return new Date(a.timestamp) - new Date(b.timestamp);
           })
           setSortState(!sortState);
           props.updateBusCounter(busSort);
         } else {
           let busSort = buscounters.sort((a, b) => {
-            return new Date(b.timestamp)-new Date(a.timestamp);
+            return new Date(b.timestamp) - new Date(a.timestamp);
           })
           setSortState(!sortState);
           props.updateBusCounter(busSort);
@@ -201,13 +201,13 @@ function Dashboard(props) {
   };
 
   //pre-process header for table
-  const state = (<div>State <SortIcon onClick={() => sortData("state")} role="button" /></div>);
-  const age = (<div>Age <SortIcon onClick={() => sortData("age")} role="button" /></div>);
-  const gender = (<div>Gender <SortIcon onClick={() => sortData("gender")} role="button" /></div>);
-  const bus = (<div>Bus <SortIcon onClick={() => sortData("bus")} role="button" /></div>);
-  const time = (<div>Time <SortIcon onClick={() => sortData("time")} role="button" /></div>);
+  const stateHeader = (<div>STATE <SortIcon onClick={() => sortData("state")} role="button" /></div>);
+  const ageHeader = (<div>AGE <SortIcon onClick={() => sortData("age")} role="button" /></div>);
+  const genderHeader = (<div>GENDER <SortIcon onClick={() => sortData("gender")} role="button" /></div>);
+  const busHeader = (<div>BUS <SortIcon onClick={() => sortData("bus")} role="button" /></div>);
+  const timeHeader = (<div>TIME <SortIcon onClick={() => sortData("time")} role="button" /></div>);
 
-  const showBusCounterHeader = ["ID", state, "Latitude", "Longtitude", age, gender, bus, time, "Image"];
+  const showBusCounterHeader = ["ID", stateHeader, "LATITUDE", "LONGTITUDE", ageHeader, genderHeader, busHeader, timeHeader, "IMAGE"];
 
   //pre-process data for table
   const showBusCounter = () => {

@@ -28,7 +28,7 @@ import Language from "@material-ui/icons/Language";
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import Device from "views/Device/Device.js";
-// import Documentation from "views/Documentation/Documentation.js";
+import Documentation from "views/Documentation/Documentation.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
@@ -75,7 +75,7 @@ const dashboardRoutes = [
     name: "Documentation",
     rtlName: "طباعة",
     icon: LibraryBooks,
-    component: Typography,
+    component: Documentation,
     layout: "/"
   },
   {
