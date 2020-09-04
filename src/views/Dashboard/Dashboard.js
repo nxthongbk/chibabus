@@ -236,7 +236,8 @@ function Dashboard(props) {
           src={imgURL}
           onClick={() => customerImage(imgURL)}
           width="100px"
-          onError={(e) => e.target.src = "/images/load-error.jpg"} />
+          onError={(e) => e.target.src = "/images/load-error.jpg"}
+          role="button" />
       ];
     });
     return arr;
@@ -363,6 +364,7 @@ function Dashboard(props) {
                 type="Line"
                 options={customerChart(props.customeronday).options}
                 listener={customerChart(props.customeronday).animation}
+                plugins={customerChart(props.customeronday).plugins}
               />
             </CardHeader>
             <CardBody>
@@ -391,6 +393,7 @@ function Dashboard(props) {
                 type="Line"
                 options={customerChart(props.customeronmonth).options}
                 listener={customerChart(props.customeronmonth).animation}
+                plugins={customerChart(props.customeronday).plugins}
               />
             </CardHeader>
             <CardBody>

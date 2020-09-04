@@ -37,7 +37,7 @@ const tableStyle = theme => ({
     maxWidth: "100%",
     backgroundColor: "transparent",
     borderSpacing: "0",
-    borderCollapse: "collapse"
+    borderCollapse: "collapse",
   },
   tableHeadCell: {
     color: "inherit",
