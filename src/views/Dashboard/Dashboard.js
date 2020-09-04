@@ -29,7 +29,7 @@ import { connect } from 'react-redux';
 import ChartistGraph from "react-chartist";
 // chart data
 import {
-  dailyCustomerChart,
+  customerChart,
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -56,6 +56,7 @@ function Dashboard(props) {
 
   useEffect(() => {
     getData();
+    sortData("time");
   }, []);
 
   //get data from server
@@ -65,7 +66,7 @@ function Dashboard(props) {
     .then(res => buscounter = res)
     .catch(err => {
       if(err.response && err.response.status===401){
-        props.setLogin(false)
+        props.setLogin(false);
       }
     });
     props.updateBusCounter(buscounter.data);
@@ -211,7 +212,10 @@ function Dashboard(props) {
 
   //pre-process data for table
   const showBusCounter = () => {
-    const arr = props.buscounter && props.buscounter.map((customer, index) => {
+    let sortedBuscounter = props.buscounter.sort((a, b) => {
+      return new Date(b.timestamp) - new Date(a.timestamp);
+    });
+    const arr = sortedBuscounter.map((customer, index) => {
       //handle image
       let imgURL;
       if (customer.image === "unknow_image")
@@ -355,10 +359,10 @@ function Dashboard(props) {
             <CardHeader color="success">
               <ChartistGraph
                 className="ct-chart"
-                data={dailyCustomerChart(props.customeronday).data}
+                data={customerChart(props.customeronday).data}
                 type="Line"
-                options={dailyCustomerChart(props.customeronday).options}
-                listener={dailyCustomerChart(props.customeronday).animation}
+                options={customerChart(props.customeronday).options}
+                listener={customerChart(props.customeronday).animation}
               />
             </CardHeader>
             <CardBody>
@@ -383,10 +387,10 @@ function Dashboard(props) {
             <CardHeader color="warning">
               <ChartistGraph
                 className="ct-chart"
-                data={dailyCustomerChart(props.customeronmonth).data}
+                data={customerChart(props.customeronmonth).data}
                 type="Line"
-                options={dailyCustomerChart(props.customeronmonth).options}
-                listener={dailyCustomerChart(props.customeronmonth).animation}
+                options={customerChart(props.customeronmonth).options}
+                listener={customerChart(props.customeronmonth).animation}
               />
             </CardHeader>
             <CardBody>

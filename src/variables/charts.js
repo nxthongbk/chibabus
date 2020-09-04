@@ -12,15 +12,17 @@ var delays2 = 80,
   durations2 = 500;
 
 // ##############################
-// // // Daily Customer
+// // // Customer Chart Data
 // #############################
-const dailyCustomerChart = (data) => {
+const customerChart = (data) => {
   if (data) {
+    var max = 0;
     var labels = data.map((day, index) => {
       return day._id;
     });
 
     var series = data.map((day, index) => {
+      if (day.count > max) max = day.count;
       return day.count;
     });
 
@@ -34,7 +36,7 @@ const dailyCustomerChart = (data) => {
           tension: 0
         }),
         low: 0,
-        high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+        high: max + 10, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
         chartPadding: {
           top: 0,
           right: 0,
@@ -325,7 +327,7 @@ const completedTasksChart = () => {
 };
 
 module.exports = {
-  dailyCustomerChart,
+  customerChart,
   monthlyCustomerChart,
   dailySalesChart,
   emailsSubscriptionChart,
