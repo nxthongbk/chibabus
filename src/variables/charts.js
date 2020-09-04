@@ -2,6 +2,7 @@
 // // // javascript library for creating charts
 // #############################
 var Chartist = require("chartist");
+var ctPointLabels = require("chartist-plugin-pointlabels");
 
 // ##############################
 // // // variables used to create animation on charts
@@ -73,7 +74,13 @@ const customerChart = (data) => {
             });
           }
         }
-      }
+      },
+      plugins: [
+        ctPointLabels({
+          textAnchor: 'middle',
+          labelInterpolationFnc: function(value) {return '$' + value.toFixed(2)}
+        })
+      ]
     };
     return chart;
   }
