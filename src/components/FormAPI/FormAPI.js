@@ -1,19 +1,16 @@
 import React from "react";
 // nodejs library that concatenates classes
-import classNames from "classnames";
+// import classNames from "classnames";
 // nodejs library to set properties for components
 import PropTypes from "prop-types";
 // reactstrap
 import { UncontrolledCollapse } from 'reactstrap';
 // material-ui components
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 // core components
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
 
 import styles from "assets/jss/material-dashboard-react/components/buttonStyle.js";
 
@@ -36,23 +33,6 @@ export default function FormAPI(props) {
 		APIdata,
 		...rest
 	} = props;
-	const btnClasses = classNames({
-		[classes.button]: true,
-		[classes[size]]: size,
-		[classes[color]]: color,
-		[classes.round]: round,
-		[classes.disabled]: disabled,
-		[classes.simple]: simple,
-		[classes.block]: block,
-		[classes.link]: link,
-		[classes.justIcon]: justIcon,
-		[className]: className
-	});
-
-	const [isOpen, setIsOpen] = React.useState(false);
-	const [isArray, setIsArray] = React.useState(false);
-
-	const toggle = () => setIsOpen(!isOpen);
 
 	const mappingObjectHandler = (data) => {
 		const result = Object.entries(data).map(([key, value]) => {

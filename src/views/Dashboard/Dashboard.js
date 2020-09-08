@@ -97,10 +97,10 @@ function Dashboard(props) {
     setUpTime(today.toLocaleString());
     let current = 0;
     let left = 0;
-    const arr = buscounter.map((customer, index) => {
+    buscounter.map((customer, index) => {
       let customerDate = new Date(customer.timestamp);
       if (datesAreOnSameDay(today, customerDate)) {
-        if (customer.state == "up") {
+        if (customer.state === "up") {
           current += 1;
         } else {
           left += 1;
@@ -198,6 +198,8 @@ function Dashboard(props) {
           props.updateBusCounter(busSort);
         }
         break;
+      default:
+        break;
     }
   };
 
@@ -234,6 +236,7 @@ function Dashboard(props) {
         timeFormat(customer.timestamp),
         <img
           src={imgURL}
+          alt="Customer"
           onClick={() => customerImage(imgURL)}
           width="100px"
           onError={(e) => e.target.src = "/images/load-error.jpg"}
@@ -368,7 +371,7 @@ function Dashboard(props) {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Amount of Customer in past 7 days</h4>
+              <h4 className={classes.cardTitle}>Amount of Customers per Day</h4>
               {/* <p className={classes.cardCategory}>
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%
@@ -438,7 +441,7 @@ function Dashboard(props) {
           </ModalHeader>
           <ModalBody>
             <Card>
-              <img top width="100%" src={imageURL} alt="Customer Image" />
+              <img top width="100%" src={imageURL} alt="Customer" />
             </Card>
             <ModalFooter>
               <Button color="secondary" onClick={toggle}>Close</Button>
