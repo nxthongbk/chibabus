@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '@material-ui/core/Icon';
 import { CSVLink } from 'react-csv';
 
 export default ({ csvHeader, csvData, fileName }) => {
