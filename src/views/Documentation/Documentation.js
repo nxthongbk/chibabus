@@ -18,19 +18,17 @@ import { Collapse } from 'reactstrap';
 // redux
 import { connect } from 'react-redux';
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-// document data
-import { loginAPI, getUserInfoAPI } from '../../variables/documents';
+// documents data
+import APIs from '../../variables/APIs';
 
 const useStyles = makeStyles(styles);
 
 function Documentation(props) {
 	const classes = useStyles();
-	
-	// must add all APIs to this list
-	const APIList = [loginAPI(), getUserInfoAPI()];
 
 	// detect color for each method
-	const methodColor = (method) => {;
+	const methodColor = (method) => {
+		;
 		switch (method) {
 			case "GET":
 				return "success";
@@ -43,10 +41,18 @@ function Documentation(props) {
 			default:
 				return "white";
 		}
-	};	
+	};
 
-	// show all APIs
-	const showAPIList = APIList.map((api, index) => {
+	// API List
+	const APIList = APIs.map((api, index) => {
+		return (<div>
+			<CustomButton color={methodColor(api.method)} id={api.id}>{api.name}</CustomButton>
+			<br></br>
+		</div>);
+	});
+
+	// Show all APIs
+	const showAPIs = APIs.map((api, index) => {
 		return (
 			<FormAPI
 				color={methodColor(api.method)}
@@ -56,9 +62,16 @@ function Documentation(props) {
 	});
 
 	if (!props.isLogin) return <Redirect to="/login" />
-	return (<div>
-		{showAPIList}
-	</div>)
+	return (
+		<GridContainer>
+			<GridItem xs={12} sm={6} md={3}>
+				<div>{APIList}</div>
+			</GridItem>
+			<GridItem xs={12} sm={6} md={9}>
+				{showAPIs}
+			</GridItem>
+		</GridContainer>
+	);
 }
 
 const mapState = state => ({
