@@ -6,19 +6,19 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import ButtonCustom from "components/CustomButtons/Button.js";
 import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import { Redirect } from 'react-router-dom';
 import SortIcon from '@material-ui/icons/UnfoldMore';
-import axios from '../../service/axiosInstance';
 import { connect } from 'react-redux';
 
 // services
 import timeFormat from '../../service/timeFormat';
 import ExportCSV from '../../service/exportCSV';
+
+import aws_credentials from '../../aws_credentials';
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -52,9 +52,9 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 AWS.config.update({
-  accessKeyId: 'AKIAYOY43EWEA55VNDO3',
-  secretAccessKey: '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',
-  region: 'ap-southeast-1'
+  accessKeyId: aws_credentials.accessKeyId,
+  secretAccessKey: aws_credentials.secretAccessKey,
+  region: aws_credentials.region
 });
 
 const s3 = new AWS.S3();
@@ -103,7 +103,6 @@ function Customer(props) {
   };
   //pre-process header for table
   const UploadTimeHeader = (<div>UPLOAD TIME <SortIcon onClick={() => sortData("time")} role="button" /></div>);
-
   const showCustomerHeader = ["IMAGE", UploadTimeHeader];
 
   //pre-process data for table
@@ -116,6 +115,20 @@ function Customer(props) {
     });
     console.log(a);
     return a;
+  };
+  //export CSV
+  const csvHeaderData = [
+    { label: "Source", key: "source" },
+    { label: "UPTIME", key: "uptime" }
+  ];
+  const csvBodyData = () => {
+    const arr = props.customers.map((customer, index) => {
+      return {
+        "source": "http://labtma.com:7010/uploads/" + customer.Key,
+        "uptime": timeFormat(customer.LastModified)
+      };
+    });
+    return arr;
   };
 
   if (!props.isLogin) return <Redirect to="/login" />
@@ -130,7 +143,7 @@ function Customer(props) {
             </p>
           </CardHeader>
           <CardBody>
-            {/* <ExportCSV csvHeader={} csvData={} fileName="Devices" /> */}
+            <ExportCSV csvHeader={csvHeaderData} csvData={csvBodyData()} fileName="CustomerCollection" />
             <Table
               tableHeaderColor="primary"
               tableHead={showCustomerHeader}

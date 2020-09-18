@@ -253,6 +253,7 @@ function Device(props) {
     return a;
   };
 
+  //export CSV
   const csvHeaderData = [
     { label: "ID", key: "_id" },
     { label: "LICENSE PLATE", key: "license_plate" },
@@ -272,6 +273,7 @@ function Device(props) {
     });
     return arr;
   };
+  
   if(!props.isLogin) return <Redirect to="/login" />
   return (
     <GridContainer>
