@@ -77,7 +77,7 @@ function Device(props) {
         props.setLogin(false)
       }
     });
-    props.updateDevice(listofdevices.data)
+    props.updateDevice(listofdevices.data);
   };
 
   useEffect(() => {
@@ -351,7 +351,7 @@ const mapDispatch = dispatch => ({
   updateDevice: (devices) => {
     dispatch({ type: "UPDATE_DEVICE", devices })
   },
-  setLogin : (login) =>{
+  setLogin: (login) =>{
     dispatch({type: "SET_LOGIN", login})
   }
 })
